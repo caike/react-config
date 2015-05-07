@@ -9,23 +9,8 @@ class App extends React.Component {
     };
   }
 
-  onSubmitHandler(e){
-    e.preventDefault();
-    var firstNameNode = this.refs.firstName.getDOMNode();
-    var firstName = firstNameNode.value;
-
-    var lastNameNode = this.refs.lastName.getDOMNode();
-    var lastName = lastNameNode.value;
-
-    this.showProfile(firstName, lastName);
-  }
-
-  componentDidMount(){
-    this.refs.firstName.getDOMNode().focus();
-  }
-
-  showProfile(first, last){
-    var profile = `First Name: ${first}, Last Name: ${last}`;
+  registrationSubmit(firstName, lastName){
+    var profile = `First Name: ${firstName}, Last Name: ${lastName}`;
     this.setState({ hasProfile: true, profile: profile });
   }
 
@@ -35,7 +20,34 @@ class App extends React.Component {
     if(this.state.hasProfile){
       body = this.state.profile;
     }else{
-      body = (<form onSubmit={this.onSubmitHandler.bind(this)}>
+      body = <RegistrationForm onSubmitHandler={this.registrationSubmit.bind(this)} />
+    }
+    return (<div> {body} </div>);
+  }
+}
+
+class RegistrationForm extends React.Component {
+
+  componentDidMount(){
+    this.refs.firstName.getDOMNode().focus();
+  }
+
+  submit(e){
+    e.preventDefault();
+    var firstNameNode = this.refs.firstName.getDOMNode();
+    var firstName = firstNameNode.value;
+
+    var lastNameNode = this.refs.lastName.getDOMNode();
+    var lastName = lastNameNode.value;
+
+    this.props.onSubmitHandler(firstName, lastName);
+
+    firstNameNode.value = '';
+    lastNameNode.value = '';
+  }
+
+  render(){
+      return (<form onSubmit={this.submit.bind(this)}>
         <p>
           <input ref="firstName" placeholder="First Name" />
         </p>
@@ -46,8 +58,6 @@ class App extends React.Component {
           <input type="submit" />
         </p>
       </form>);
-    }
-    return (<div> {body} </div>);
   }
 }
 
