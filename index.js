@@ -9,7 +9,7 @@ class App extends React.Component {
     };
   }
 
-  registrationSubmit(firstName, lastName){
+  registrationSubmitAction(firstName, lastName){
     var profile = `First Name: ${firstName}, Last Name: ${lastName}`;
     this.setState({ hasProfile: true, profile: profile });
   }
@@ -20,7 +20,7 @@ class App extends React.Component {
     if(this.state.hasProfile){
       body = this.state.profile;
     }else{
-      body = <RegistrationForm onSubmitHandler={this.registrationSubmit.bind(this)} />
+      body = <RegistrationForm registrationSubmitAction={this.registrationSubmitAction.bind(this)} />
     }
     return (<div> {body} </div>);
   }
@@ -32,7 +32,7 @@ class RegistrationForm extends React.Component {
     this.refs.firstName.getDOMNode().focus();
   }
 
-  submit(e){
+  registrationHandler(e){
     e.preventDefault();
     var firstNameNode = this.refs.firstName.getDOMNode();
     var firstName = firstNameNode.value;
@@ -40,14 +40,14 @@ class RegistrationForm extends React.Component {
     var lastNameNode = this.refs.lastName.getDOMNode();
     var lastName = lastNameNode.value;
 
-    this.props.onSubmitHandler(firstName, lastName);
+    this.props.registrationSubmitAction(firstName, lastName);
 
     firstNameNode.value = '';
     lastNameNode.value = '';
   }
 
   render(){
-      return (<form onSubmit={this.submit.bind(this)}>
+      return (<form onSubmit={this.registrationHandler.bind(this)}>
         <p>
           <input ref="firstName" placeholder="First Name" />
         </p>
